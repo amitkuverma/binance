@@ -1,16 +1,14 @@
-import Table from "react-bootstrap/Table";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Order.css";
 import menu1 from "../assets/menu1.svg";
 import menu2 from "../assets/menu2.svg";
 import menu3 from "../assets/menu3.svg";
+import TablePage from "./table";
 
 const Order = () => {
   const [symbols, setSymbols] = useState([]);
   const [symbol, setSymbol] = useState("ETHBTC");
-  const [bids, setBids] = useState([]);
-  const [asks, setAsks] = useState([]);
   const [tggMenu1, setTggMenu1] = useState(true);
   const [tggMenu2, setTggMenu2] = useState(true);
   const [tggMenu3, setTggMenu3] = useState(true);
@@ -24,20 +22,6 @@ const Order = () => {
     };
     getOrders();
   }, []);
-
-  useEffect(() => {
-    axios
-      .get("https://api.binance.com/api/v3/depth", {
-        params: {
-          symbol: symbol,
-          limit: 10,
-        },
-      })
-      .then((response) => {
-        setBids(response.data.bids);
-        setAsks(response.data.asks);
-      });
-  }, [symbol]);
 
   return (
     <div className="container px-0">
@@ -76,66 +60,17 @@ const Order = () => {
               variant="dark"
               onChange={(e) => setSymbol(e.target.value)}
             >
-              {symbols.map((item) => (
-                <option value={item.symbol}>{item.symbol}</option>
+              {symbols.map((item, index) => (
+                <option key={index} value={item.symbol}>{item.symbol}</option>
               ))}
             </select>
           </div>
-          <Table
-            responsive="sm"
-            borderless
-            hover
-            variant="dark"
-            className="mb-0 text-white text fnt-12"
-          >
-            <thead>
-              <tr>
-                <td>Price(USDT)</td>
-                <td className="text-end">Amount(BTC)</td>
-                <td className="text-end">Total</td>
-              </tr>
-            </thead>
-            {tggMenu1 && tggMenu3 ? (
-              <tbody>
-                {bids.map((bid) => (
-                  <tr>
-                    <td>{Number(bid[0] * 1000000).toFixed(0)}</td>
-                    <td className="text-end">{Number(bid[1]).toFixed(4)}</td>
-                    <td className="text-end">
-                      {Number(bid[0] * 1000).toFixed(1) +
-                        Number(bid[1]).toFixed(1)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            ) : (
-              <></>
-            )}
-
-            <thead>
-              <tr>
-                <td className="fnt-20">6364785.45</td>
-                <td>$276782.44</td>
-                <td className="text-end">Total</td>
-              </tr>
-            </thead>
-            {tggMenu1 && tggMenu2 ? (
-              <tbody>
-                {asks.map((ask) => (
-                  <tr>
-                    <td>{Number(ask[0] * 1000000).toFixed(0)}</td>
-                    <td className="text-end">{Number(ask[1]).toFixed(4)}</td>
-                    <td className="text-end">
-                      {Number(ask[0] * 1000).toFixed(1) +
-                        Number(ask[1]).toFixed(1)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            ) : (
-              <></>
-            )}
-          </Table>
+          <TablePage
+            symbol={symbol}
+            tggMenu1={tggMenu1}
+            tggMenu2={tggMenu2}
+            tggMenu3={tggMenu3}
+          />
         </div>
       </div>
     </div>
