@@ -1,4 +1,4 @@
-.fnt-12 {
+/* .fnt-12 {
   font-size: 12px;
   color: rgb(132, 142, 156);
 }
@@ -6,7 +6,7 @@
 .fnt-20 {
   font-size: 20px;
   color: rgb(132, 142, 156);
-}
+} */
 
 :focus-visible {
   outline: none !important;
